@@ -16,7 +16,7 @@ def analyze_trust_score_with_llm(profile: str) -> float:
     response = client.chat.completions.create(
         model="gpt-4o",
         messages=[{"role": "user", "content": prompt}],
-        temperature=0.2
+        temperature=0.0
     )
     text = response.choices[0].message.content
     match = re.search(r"\d\.\d+", text)

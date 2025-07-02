@@ -13,9 +13,6 @@ def get_trust_score(req: TokenRequest):
         token_data = get_token_data(req.token_id)
         contract_data = analyze_contract(req.contract_address)
 
-        # Здесь embedding может быть не нужен, если Solana_MODE
-        # text = "..." → можно убрать, если не используется
-
         score = calculate_trust_score(
             token_id=req.token_id,
             contract_address=req.contract_address
