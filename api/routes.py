@@ -9,6 +9,7 @@ router = APIRouter()
 
 @router.post("/trust-score")
 def get_trust_score(req: TokenRequest):
+    print(req.token_id)
     try:
         token_data = get_token_data(req.token_id)
         contract_data = analyze_contract(req.contract_address)
