@@ -1,11 +1,14 @@
-
 import re
 import openai
 import os
+from functools import lru_cache
 
 client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
+@lru_cache(maxsize=500)
 def analyze_trust_score_with_llm(profile: str) -> float:
+    print("🧾 Token Profile (for LLM):\n", profile)
+
     prompt = f"""
 Ты эксперт по безопасности криптовалют. Оцени риск токена по следующему профилю:
 

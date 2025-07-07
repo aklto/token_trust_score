@@ -16,8 +16,13 @@ docker run -d -p 8000:8000 --name trust-api token-trust-score
 
 ## Конфигурация
 
-API-ключи положить в .env
+API-ключи находятся в `config.py`:
 
+```python
+GITHUB_TOKEN = "your_github_token"
+OPENAI_KEY = "your_openai_key"
+ETHERSCAN_API_KEY = "your_etherscan_key"
+```
 ---
 
 ## Endpoint

@@ -11,12 +11,20 @@ def get_contract_safety_score(data):
         return 0.2
     return 1.0
 
-def get_holders_score(data):
-    ratio = data.get("top_holder_ratio", 1.0)
-    if ratio >= 0.9: return 0.0
-    if ratio >= 0.5: return 0.3
-    if ratio >= 0.3: return 0.7
-    return 1.0
+
+def get_holders_score(contract_data: dict) -> float:
+    ratio = contract_data.get("top_holder_ratio")
+
+    if ratio is None:
+        return 0.5
+
+    if ratio >= 0.9:
+        return 0.0
+    elif ratio >= 0.5:
+        return 0.3
+    else:
+        return 1.0
+
 
 def get_activity_score(tx_count, mints, burns):
     total = tx_count + mints + burns
