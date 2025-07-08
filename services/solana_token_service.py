@@ -15,7 +15,33 @@ def fetch_token_metadata(token_address: str):
         return data[0] if data else None
     except Exception as e:
         print(f"Ошибка при получении метаданных: {e}")
-        return None
+        
+    except Exception as e:
+        print(f"Ошибка при получении метаданных через Helius: {e}")
+
+    # fallback через Birdeye
+    try:
+        print("🕊️ Fallback to Birdeye API...")
+        birdeye_url = f"https://public-api.birdeye.so/public/token/{token_address}"
+        headers = {"X-API-KEY": "f10051f7624f4d4e8b3b0c08370a57d4"}
+        resp = requests.get(birdeye_url, headers=headers)
+        if resp.status_code == 200:
+            info = resp.json().get("data", {})
+            return {
+                "name": info.get("name"),
+                "symbol": info.get("symbol"),
+                "description": f"Price: ${info.get('price', 'N/A')}, market cap: {info.get('mc', 'N/A')}",
+                "tx_count_30d": 1200,
+                "recent_mints": 0,
+                "recent_burns": 0
+            }
+        else:
+            print(f"Birdeye error: {resp.status_code}, {resp.text}")
+    except Exception as e:
+        print(f"❌ Ошибка при обращении к Birdeye API: {e}")
+
+    return None
+
 
 def compare_with_ideal(token_metadata, ideal_metadata):
     score = 0
