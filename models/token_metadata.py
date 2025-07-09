@@ -1,0 +1,1 @@
+# Token metadata model class

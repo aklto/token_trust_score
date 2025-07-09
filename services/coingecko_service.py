@@ -1,38 +1,27 @@
+
 import requests
 import logging
 
 logger = logging.getLogger(__name__)
 
-COINGECKO_BASE_URL = "https://api.coingecko.com/api/v3"
-
-def get_token_data(token_id: str) -> dict:
-    url = f"{COINGECKO_BASE_URL}/coins/{token_id}"
+def fetch_token_market_data(token_id: str) -> dict:
     try:
-        resp = requests.get(url)
+        url = f"https://api.coingecko.com/api/v3/coins/{token_id.lower()}"
+        resp = requests.get(url, timeout=10)
         if resp.status_code == 200:
-            return resp.json()
-        elif resp.status_code == 404:
+            data = resp.json()
+            market_data = {
+                "market_cap": data.get("market_data", {}).get("market_cap", {}).get("usd"),
+                "volume_24h": data.get("market_data", {}).get("total_volume", {}).get("usd"),
+                "description": data.get("description", {}).get("en", ""),
+                "symbol": data.get("symbol", ""),
+                "name": data.get("name", "")
+            }
+            return market_data
+        else:
             logger.warning(f"⚠️ Token '{token_id}' not found on CoinGecko.")
             return {}
-        else:
-            logger.error(f"❌ Unexpected CoinGecko response: {resp.status_code} — {resp.text}")
-            return {}
     except Exception as e:
-        logger.error(f"❌ CoinGecko request failed: {e}")
+        logger.error(f"❌ CoinGecko API error: {e}")
         return {}
-
-def fetch_market_data(token_id: str) -> dict:
-    """
-    Получает краткие данные о цене токена (если нужно отдельно).
-    """
-    url = f"{COINGECKO_BASE_URL}/simple/price?ids={token_id}&vs_currencies=usd"
-    try:
-        resp = requests.get(url)
-        if resp.status_code == 200:
-            return resp.json()
-        else:
-            logger.warning(f"⚠️ Simple price fetch failed: {resp.status_code}")
-            return {}
-    except Exception as e:
-        logger.error(f"❌ CoinGecko market fetch failed: {e}")
-        return {}
+    
