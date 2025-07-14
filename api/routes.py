@@ -16,7 +16,7 @@ def get_trust_score(req: TokenRequest):
     logger.info(f"Incoming request: {req.dict()}")
 
     try:
-        token_data = fetch_token_market_data(req.token_id)  # ✅ исправлено здесь
+        token_data = fetch_token_market_data(req.token_id)
         logger.info(f"Token data fetched for {req.token_id}")
 
         contract_data = analyze_contract(req.contract_address)
@@ -25,7 +25,7 @@ def get_trust_score(req: TokenRequest):
         score = calculate_trust_score(
             token_id=req.token_id,
             contract_address=req.contract_address,
-            token_data=token_data  # 💡 возможно тебе пригодится здесь
+            token_data=token_data
         )
 
         response = {
